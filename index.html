@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hokkaido Road Trip • 9–15 Nov 2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--ink:#17263b;--muted:#617187;--pink:#e94e83;--blue:#287bb8;--ice:#eaf5fc;--paper:#fff;--line:#dce7ef;--green:#287b65}
+*{box-sizing:border-box}body{margin:0;background:#edf4f8;color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif}
+header{background:linear-gradient(125deg,#123c64,#247bb0 62%,#8fc5df);color:white;padding:30px max(18px,calc((100vw - 1180px)/2));position:relative;overflow:hidden}
+header:after{content:"❄";position:absolute;right:8%;top:-35px;font-size:180px;opacity:.12}
+.kicker{letter-spacing:.13em;font-size:12px;font-weight:800;color:#c9eaff}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;flex-wrap:wrap}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.05;margin:8px 0}.hero p{margin:8px 0;color:#e4f5ff}.pill{display:inline-block;background:#f05b8c;color:white;border-radius:30px;padding:8px 15px;font-weight:800}
+main{max-width:1180px;margin:auto;padding:22px 16px 50px}.notice{background:#fff7e7;border:1px solid #f2d99f;padding:13px 16px;border-radius:14px;margin-bottom:18px;color:#694d17;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.stat{background:white;border:1px solid var(--line);border-radius:15px;padding:14px}.stat b{display:block;font-size:22px;color:var(--blue)}.stat span{font-size:12px;color:var(--muted)}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:26px 0 12px}.section-title h2{margin:0;font-size:23px}.section-title small{color:var(--muted)}
+.layout{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;align-items:start}.panel{background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden}.panel-head{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.panel-head h3{margin:0;font-size:17px}.panel-head small{color:var(--muted)}#map{height:510px;width:100%;background:#dceaf2}.map-foot{padding:10px 14px;color:var(--muted);font-size:12px}
+.daybar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.daybtn{border:1px solid var(--line);background:white;color:var(--ink);border-radius:10px;padding:9px 12px;font-weight:750;cursor:pointer}.daybtn.active{background:var(--blue);border-color:var(--blue);color:white}
+.day-summary{padding:14px 16px;background:#f3f9fd;border-bottom:1px solid var(--line)}.day-summary strong{font-size:18px}.day-summary p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.stop{display:grid;grid-template-columns:58px 1fr;gap:10px;padding:13px 15px;border-bottom:1px solid #edf1f4}.stop:last-child{border:0}.time{font-size:12px;font-weight:850;color:var(--pink);background:#fff0f5;border-radius:9px;padding:6px 5px;text-align:center;height:max-content}.stop h4{margin:0 0 3px;font-size:15px}.stop p{margin:0;color:var(--muted);font-size:13px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.actions a,.linkbtn{font-size:12px;text-decoration:none;border:1px solid #cddde8;border-radius:8px;padding:6px 9px;color:#175b8a;background:#f8fcff;font-weight:700}.weather-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.weather-card{background:white;border:1px solid var(--line);border-radius:13px;padding:12px 8px;text-align:center}.weather-card b{display:block;font-size:12px}.weather-card .icon{font-size:24px;margin:7px 0}.weather-card strong{font-size:16px}.weather-card small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.route-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.route{background:white;border:1px solid var(--line);border-radius:13px;padding:13px}.route b{display:block;margin-bottom:4px}.route span{color:var(--muted);font-size:12px}.route a{display:inline-block;margin-top:8px;color:#176da6;font-size:12px;font-weight:750;text-decoration:none}
+.note{font-size:12px;color:var(--muted);line-height:1.65}.footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:850px){.layout{grid-template-columns:1fr}#map{height:390px}.stats{grid-template-columns:repeat(2,1fr)}.weather-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:480px){main{padding:15px 10px 35px}.weather-grid{grid-template-columns:repeat(2,1fr)}.route-list{grid-template-columns:1fr}.stop{grid-template-columns:52px 1fr}header{padding:24px 16px}}
+</style>
+</head>
+<body>
+<header><div class="kicker">HOKKAIDO • JAPAN • SELF-DRIVE ITINERARY</div><div class="hero"><div><h1>Hokkaido Road Trip ❄️</h1><p>9–15 พฤศจิกายน 2026 · 7 วัน 6 คืน · ขับรถเที่ยวฮอกไกโด</p></div><span class="pill">SAPPORO → OTARU → BIEI → FURANO</span></div></header>
+<main>
+<div class="notice"><b>หมายเหตุก่อนเดินทาง:</b> เว็บไซต์นี้จัดข้อมูลจากภาพแผนเที่ยวที่แนบมา และแก้วันที่ Day 4 เป็น <b>13 พ.ย. 2026</b> ตามลำดับวัน (ในภาพ Day 4 มีจุดหนึ่งพิมพ์เป็น 14 พ.ย.) เวลา/ระยะทางเป็นค่าประมาณ ควรตรวจสภาพถนน หิมะ เวลาเปิด และประกาศปิดสถานที่ก่อนออกเดินทางจริง</div>
+<div class="stats">
+<div class="stat"><b>7 วัน</b><span>9–15 พฤศจิกายน 2026</span></div>
+<div class="stat"><b>6 คืน</b><span>Sapporo · Otaru · Furano</span></div>
+<div class="stat"><b>~225 กม.</b><span>ช่วงขับรถหลัก Day 4 ตามแผน</span></div>
+<div class="stat"><b>รถเช่า</b><span>รับรถที่ New Chitose Airport</span></div>
+</div>
+<div class="section-title"><h2>🗺️ แผนที่สถานที่ทั้งหมด</h2><small>แตะหมุดเพื่อดูชื่อและเปิดแผนที่จริง</small></div>
+<div class="layout">
+<section class="panel"><div class="panel-head"><h3>แผนที่เส้นทางฮอกไกโด</h3><small>OpenStreetMap</small></div><div id="map" aria-label="แผนที่สถานที่ท่องเที่ยวฮอกไกโด"></div><div class="map-foot">เส้นเชื่อมเป็นภาพรวมเส้นทาง ไม่ใช่คำแนะนำเลี้ยวแบบนำทางสด · กด “นำทาง” ในแต่ละจุดเพื่อเปิด Google Maps</div></section>
+<section class="panel"><div class="panel-head"><h3>📍 รายละเอียดรายวัน</h3><small>เลือกวันเพื่อดูตาราง</small></div><div class="day-summary" id="daySummary"></div><div class="daybar" id="dayButtons"></div><div id="stops"></div></section>
+</div>
+<div class="section-title"><h2>🌤️ สภาพอากาศระหว่างทริป</h2><small id="weatherStatus">กำลังตรวจสอบพยากรณ์…</small></div>
+<div class="weather-grid" id="weatherGrid"></div>
+<p class="note">ข้อมูลอุณหภูมิที่อยู่ในภาพต้นฉบับเป็นค่าคาดการณ์คร่าว ๆ ไม่ใช่ข้อมูลสด ส่วนแถบนี้จะลองดึงพยากรณ์จาก Open-Meteo เมื่อเปิดไฟล์ด้วยอินเทอร์เน็ต หากข้อมูลยังไม่ครอบคลุมวันเดินทาง จะแสดงค่าอ้างอิงจากภาพแทน โปรดเช็กอีกครั้งใกล้วันเดินทาง</p>
+<div class="section-title"><h2>🚙 ช่วงการเดินทางหลัก</h2><small>เปิดเส้นทางใน Google Maps</small></div>
+<div class="route-list" id="routes"></div>
+<div class="section-title"><h2>🧤 เช็กลิสต์ก่อนออกเดินทาง</h2></div>
+<div class="panel" style="padding:15px 18px">
+<label><input type="checkbox"> เสื้อกันหนาวหลายชั้น / หมวก / ถุงมือ / ผ้าพันคอ</label><br><br>
+<label><input type="checkbox"> ใบขับขี่สากลและเอกสารรถเช่า / ประกันภัย</label><br><br>
+<label><input type="checkbox"> ตรวจยางฤดูหนาว อุปกรณ์ ETC และเงื่อนไขประกันรถเช่า</label><br><br>
+<label><input type="checkbox"> เงินสด บัตร IC โทรศัพท์ กล้อง และ Power bank</label><br><br>
+<label><input type="checkbox"> ตรวจพยากรณ์หิมะ น้ำแข็ง และประกาศปิดถนนทุกเช้า</label>
+</div>
+<div class="footer">จัดทำจากกำหนดการที่ผู้ใช้ส่งมา · แผนที่ © OpenStreetMap contributors · พยากรณ์อากาศโดย Open-Meteo</div>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const days=[
+{date:"จันทร์ 9 พ.ย.",title:"เดินทางจากประเทศไทย",base:"เดินทาง DMK → CTS เวลา 22:00 · เตรียมเอกสารและสัมภาระ",stops:[["22:00","สนามบินดอนเมือง (DMK)","เช็กอินเที่ยวบินระหว่างประเทศและเตรียมเอกสารเดินทาง",null]]},
+{date:"อังคาร 10 พ.ย.",title:"Sapporo · รับรถและเที่ยวฝั่งตะวันตก",base:"อุณหภูมิในภาพ: 2° / 8°C · เมฆมาก / อากาศเย็น",stops:[["10:40","New Chitose Airport (CTS)","ถึงสนามบิน รับกระเป๋าและผ่าน ตม.",42.7752,141.6923],["11:30","มื้อกลางวันในสนามบิน","Ramen Dojo / Hokkaido Ramen / ร้านอาหารใน CTS",42.7752,141.6923],["12:00","Clover Rental","รับรถเช่า ตรวจสภาพรถ ยางฤดูหนาว และอุปกรณ์ ETC",42.7752,141.6923],["13:00","เดินทางไป Hill of the Buddha","ขับรถประมาณ 40 กม. / 1 ชม.",42.9206,141.3628],["14:00","Hill of the Buddha","ชมพระพุทธรูปองค์ใหญ่และบริเวณสุสาน ใช้เวลาประมาณ 1 ชม.",42.9206,141.3628],["15:00","Hokkaido Jingu","ศาลเจ้าฮอกไกโด แวะสักการะและชมบริเวณศาลเจ้า",43.0545,141.3075],["15:40","Maruyama Park","เดินเล่นสวนมารุยามะใกล้ศาลเจ้า",43.0558,141.3135],["16:30","Hotel Livemax Sapporo Susukino","ขับรถเข้าเมือง เช็กอินและพัก",43.0548,141.3548],["17:30","Susukino Ramen Yokocho","มื้อเย็นย่านราเมง",43.0554,141.3541],["18:30","Susukino & Tanukikoji","เดินเล่นและซื้อของฝาก",43.0567,141.3534]]},
+{date:"พุธ 11 พ.ย.",title:"Sapporo City",base:"อุณหภูมิในภาพ: 1° / 9°C · มีเมฆบางส่วน",stops:[["08:00","Hotel Livemax Sapporo Susukino","ออกจากโรงแรม",43.0548,141.3548],["08:10","Nijo Market","ตลาดปลาและอาหารทะเล ลองชิมข้าวหน้าปลา",43.0585,141.3586],["09:30","Sapporo Clock Tower","หอนาฬิกาประจำเมืองและพิพิธภัณฑ์",43.0626,141.3535],["10:00","Former Hokkaido Government Office","อาคารที่ทำการรัฐบาลเก่าหลังอิฐแดง",43.0638,141.3475],["10:30","Odori Park","สวนโอโดริและบริเวณ Sapporo TV Tower",43.0606,141.3520],["12:00","Saizeriya Susukino Kosaten","มื้อกลางวันในย่าน Susukino",43.0550,141.3540],["13:30","Shiroi Koibito Park","สวนและโรงงานช็อกโกแลต ใช้เวลาประมาณ 1 ชม.",43.0889,141.2717],["15:00","Sapporo Factory","แหล่งช้อปปิ้งในอาคารอิฐเก่า",43.0675,141.3610],["17:00","Sapporo Beer Museum","พิพิธภัณฑ์เบียร์และประวัติการผลิต",43.0717,141.3668],["19:00","Dinner · Yakiniku","มื้อเย็นย่าน Susukino",43.0550,141.3540]]},
+{date:"พฤหัสบดี 12 พ.ย.",title:"Sapporo → Noboribetsu → Otaru",base:"อุณหภูมิในภาพ: -1° / 6°C · เมฆมาก / อากาศเย็น",stops:[["08:00","ออกจาก Sapporo","ขับไป Noboribetsu ประมาณ 110 กม. / 2 ชม.",42.4950,141.1450],["09:00","Noboribetsu Jigokudani Valley","หุบเขานรก เดินชมเส้นทางธรรมชาติประมาณ 1 ชม.",42.4925,141.1450],["11:00","Noboribetsu Marine Park NIXE","เดินทางไปพิพิธภัณฑ์สัตว์น้ำ ใช้เวลาประมาณ 1 ชม.",42.4525,141.1780],["12:00","Marine Park NIXE","ชมเพนกวินและสัตว์ทะเล ตรวจรอบการแสดงก่อนเข้าชม",42.4525,141.1780],["13:00","มื้อกลางวัน / พักรถ","เลือกร้านใกล้ Marine Park หรือร้านสะดวกซื้อ",42.4525,141.1780],["14:00","เดินทางไป Otaru","ขับรถประมาณ 143 กม. / 2 ชม.",43.2000,141.0015],["16:00","Otaru no Nukumori","เช็กอินที่พักและเก็บสัมภาระ",43.2000,141.0015],["16:30","Yoichiya","มื้อเย็นร้านอาหารทะเล / ข้าวหน้าปลาดิบ",43.2000,141.0015],["18:00","Otaru Canal & Sakaimachi Street","เดินเล่นคลองโอตารุ ร้านขนม ของฝาก และกล่องดนตรี",43.2000,141.0015]]},
+{date:"ศุกร์ 13 พ.ย.",title:"Otaru → Biei → Furano",base:"อุณหภูมิในภาพ: -2° / 5°C · เมฆเป็นส่วนมาก / อากาศหนาว",stops:[["08:00","ออกจากที่พัก Otaru","เตรียมสัมภาระและเดินทางไป Asari Station",43.2000,141.0015],["08:30","Asari Station","สถานีรถไฟเล็ก ๆ ริมทะเล แวะถ่ายภาพประมาณ 30 นาที",43.1430,141.0360],["09:00","มื้อเช้า / Ramen Santouka Otaru","รับประทานอาหารก่อนขับรถไกล",43.1900,141.0000],["11:00","เดินทางไป Biei","ขับรถประมาณ 176 กม. / 3 ชม.",43.5883,142.4660],["14:00","Biei Christmas Tree","แวะชมต้นไม้กลางทุ่งและวิวชนบท",43.5880,142.4660],["14:30","Mid Seven Tree","จุดถ่ายภาพต้นไม้เดี่ยวกลางทุ่ง",43.5900,142.4700],["15:10","Fermé La Terre Biei","คาเฟ่และขนมหวาน ใช้เวลาประมาณ 50 นาที",43.5905,142.4650],["16:00","KONON cafe and stay","แวะคาเฟ่และพักระหว่างทาง",43.5900,142.4600],["16:30","เดินทางไป Furano","ขับรถประมาณ 34 กม. / 40 นาที",43.3233,142.3563],["17:30","ที่พัก Furano","เช็กอินและพักผ่อน",43.3233,142.3563],["19:00","Dinner · Furano","มื้อเย็นในเมือง Furano",43.3233,142.3563]]},
+{date:"เสาร์ 14 พ.ย.",title:"Furano → Asahidake → Sapporo",base:"อุณหภูมิในภาพ: -6° / 0°C · มีโอกาสหิมะสูง",stops:[["08:00","ออกจากที่พัก Furano","เดินทางไป Shirahige Waterfall",43.3233,142.3563],["09:00","Shirahige Waterfall","ชมน้ำตกสีฟ้าใน Biei",43.4739,142.6390],["10:00","Blue Pond (Aoiike)","บ่อน้ำสีฟ้า ใช้เวลาเดินชมประมาณ 1 ชม.",43.4912,142.6140],["11:00","เดินทางไป Asahidake Ropeway","ขับรถไปสถานี Ropeway",43.6630,142.7880],["13:00","Asahidake Ropeway","ขึ้นกระเช้าชมวิวภูเขา ตรวจสถานะเปิดบริการและสภาพอากาศก่อนเดินทาง",43.6630,142.7880],["15:00","เดินทางกลับ Sapporo","ขับรถประมาณ 194 กม. / 3 ชม.",43.0619,141.3544],["19:00","Cloud House Sapporo","ถึงที่พัก เช็กอินและเก็บสัมภาระ",43.0619,141.3544],["19:30","ซื้อของ / มื้อเย็น","เดินเล่นและรับประทานอาหารใกล้ที่พัก",43.0619,141.3544]]},
+{date:"อาทิตย์ 15 พ.ย.",title:"เดินทางกลับประเทศไทย",base:"อุณหภูมิในภาพ: -3° / 2°C · มีเมฆ / หนาว",stops:[["06:30","ออกจากที่พักไป New Chitose Airport","เผื่อเวลาเดินทางประมาณ 1 ชม. และคืนรถเช่า",42.7752,141.6923],["เช้า","New Chitose Airport (CTS)","คืนรถ เช็กอิน และเดินทางกลับประเทศไทย",42.7752,141.6923]]}
+];
+const map=L.map('map').setView([43.25,141.65],8);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
+const allMarkers=[];
+const colors=['#d84c80','#277db6','#2b8a72','#a16b31','#7158a6','#cf7c32','#267b8c'];
+days.forEach((d,di)=>d.stops.forEach((s,si)=>{if(typeof s[3]==='number'){const m=L.circleMarker([s[3],s[4]],{radius:7,color:colors[di],fillColor:colors[di],fillOpacity:.9,weight:2}).addTo(map);m.bindPopup(`<b>${d.date} · ${s[0]}</b><br>${s[1]}<br><a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s[1]+' Hokkaido Japan')}">เปิด Google Maps</a>`);allMarkers.push({day:di,marker:m});}}));
+const dayNames=['Day 0','Day 1','Day 2','Day 3','Day 4','Day 5','Day 6'];
+let current=1;
+function renderDay(i){current=i;document.querySelectorAll('.daybtn').forEach((b,j)=>b.classList.toggle('active',j===i));const d=days[i];document.getElementById('daySummary').innerHTML=`<strong>${dayNames[i]} · ${d.title}</strong><p>${d.date} 2026 · ${d.base}</p>`;document.getElementById('stops').innerHTML=d.stops.map((s,j)=>{const q=encodeURIComponent(s[1]+' Hokkaido Japan');const coords=typeof s[3]==='number'?`${s[3]},${s[4]}`:null;const mapurl=coords?`https://www.google.com/maps/search/?api=1&query=${coords}`:`https://www.google.com/maps/search/?api=1&query=${q}`;const street=coords?`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${coords}`:`https://www.google.com/maps/search/?api=1&query=${q}`;return `<article class="stop"><div class="time">${s[0]}</div><div><h4>${s[1]}</h4><p>${s[2]}</p><div class="actions"><a href="${mapurl}" target="_blank" rel="noopener">📍 แผนที่ / นำทาง</a><a href="${street}" target="_blank" rel="noopener">👀 ดูสถานที่จริง</a></div></div></article>`}).join('');allMarkers.forEach(x=>{if(x.day===i)x.marker.setStyle({opacity:1,fillOpacity:1});else x.marker.setStyle({opacity:.22,fillOpacity:.12})});const pts=allMarkers.filter(x=>x.day===i).map(x=>x.marker.getLatLng());if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.25));}
+document.getElementById('dayButtons').innerHTML=dayNames.map((n,i)=>`<button class="daybtn" type="button" data-day="${i}">${n}</button>`).join('');
+document.querySelectorAll('.daybtn').forEach(b=>b.addEventListener('click',()=>renderDay(Number(b.dataset.day))));
+renderDay(1);
+const routes=[
+["CTS → Hill of the Buddha","ประมาณ 40 กม. · 1 ชม.","New Chitose Airport","Hill of the Buddha"],
+["Hill of the Buddha → Hokkaido Jingu","ประมาณ 27 กม. · 40 นาที","Hill of the Buddha","Hokkaido Jingu"],
+["Sapporo → Noboribetsu","ประมาณ 110 กม. · 2 ชม.","Sapporo, Hokkaido","Noboribetsu Jigokudani"],
+["Noboribetsu → Otaru","ประมาณ 143 กม. · 2 ชม.","Noboribetsu Marine Park NIXE","Otaru Canal"],
+["Otaru → Biei","ประมาณ 176 กม. · 3 ชม.","Otaru, Hokkaido","Biei Christmas Tree"],
+["Biei → Furano","ประมาณ 34 กม. · 40 นาที","Biei, Hokkaido","Furano, Hokkaido"],
+["Furano → Asahidake","เส้นทางภูเขา · ตรวจถนนก่อนออก","Furano, Hokkaido","Asahidake Ropeway"],
+["Asahidake → Sapporo","ประมาณ 194 กม. · 3 ชม.","Asahidake Ropeway","Sapporo, Hokkaido"]
+];
+document.getElementById('routes').innerHTML=routes.map(r=>`<div class="route"><b>${r[0]}</b><span>${r[1]}</span><br><a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(r[2])}&destination=${encodeURIComponent(r[3])}&travelmode=driving">เปิดเส้นทางขับรถ ↗</a></div>`).join('');
+const weatherFallback=[["9 พ.ย.","— / —","✈️","เดินทาง"],["10 พ.ย.","2° / 8°","🌥️","Sapporo"],["11 พ.ย.","1° / 9°","🌤️","Sapporo"],["12 พ.ย.","-1° / 6°","🌥️","Noboribetsu"],["13 พ.ย.","-2° / 5°","☁️","Biei / Furano"],["14 พ.ย.","-6° / 0°","❄️","Asahidake"],["15 พ.ย.","-3° / 2°","🌨️","Sapporo"]];
+const wg=document.getElementById('weatherGrid');
+function showWeather(rows,status){wg.innerHTML=rows.map(x=>`<div class="weather-card"><b>${x[0]}</b><div class="icon">${x[2]}</div><strong>${x[1]}</strong><small>${x[3]}</small></div>`).join('');document.getElementById('weatherStatus').textContent=status;}
+showWeather(weatherFallback,'ค่าอ้างอิงจากภาพแผนเที่ยว');
+(async()=>{try{const u='https://api.open-meteo.com/v1/forecast?latitude=43.06&longitude=141.35&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code&timezone=Asia%2FTokyo&forecast_days=16';const r=await fetch(u);if(!r.ok)throw Error('forecast unavailable');const j=await r.json();const dates=['2026-11-09','2026-11-10','2026-11-11','2026-11-12','2026-11-13','2026-11-14','2026-11-15'];const rows=dates.map((date,i)=>{const k=j.daily.time.indexOf(date);if(k<0)return weatherFallback[i];const code=j.daily.weather_code[k];const icon=code>=71?'❄️':code>=51?'🌧️':code>=3?'☁️':'🌤️';return [weatherFallback[i][0],`${Math.round(j.daily.temperature_2m_min[k])}° / ${Math.round(j.daily.temperature_2m_max[k])}°`,icon,`${weatherFallback[i][3]} · ฝน ${j.daily.precipitation_probability_max[k]??'—'}%`];});showWeather(rows,'อัปเดตจาก Open-Meteo · Sapporo (ค่าพยากรณ์อาจเปลี่ยนได้)');}catch(e){document.getElementById('weatherStatus').textContent='แสดงค่าอ้างอิงจากภาพ · ไม่สามารถดึงข้อมูลสดได้ในขณะนี้';}})();
+</script>
+</body></html>
