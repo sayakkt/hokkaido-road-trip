@@ -34,7 +34,7 @@ main{max-width:1180px;margin:auto;padding:22px 16px 50px}.notice{background:#fff
 .parking-result a{display:inline-block;margin:5px 6px 0 0;font-size:12px;color:#176da6;text-decoration:none;font-weight:750}
 @media(max-width:560px){.parking-controls{grid-template-columns:1fr 1fr}.parking-controls button{grid-column:1/-1}}
 
-</style>
+.maps-tools{background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px;margin:0 0 18px;display:grid;grid-template-columns:1fr auto auto;gap:8px}.maps-tools input{min-width:0;border:1px solid #cbdbe6;border-radius:9px;padding:11px;font:inherit}.maps-tools button{border:0;border-radius:9px;padding:10px 12px;background:#176da6;color:#fff;font:inherit;font-size:13px;font-weight:800;cursor:pointer}.maps-tools .secondary{background:#edf6fc;color:#175b8a;border:1px solid #cddde8}.check-progress{font-size:12px;color:var(--muted);margin:0 0 10px}@media(max-width:600px){.maps-tools{grid-template-columns:1fr 1fr}.maps-tools input{grid-column:1/-1}.maps-tools button{font-size:12px}}</style>
 </head>
 <body>
 <header><div class="kicker">HOKKAIDO • JAPAN • SELF-DRIVE ITINERARY</div><div class="hero"><div><h1>Hokkaido Road Trip ❄️</h1><p>9–15 พฤศจิกายน 2026 · 7 วัน 6 คืน · ขับรถเที่ยวฮอกไกโด</p></div><span class="pill">SAPPORO → OTARU → BIEI → FURANO</span></div></header>
@@ -46,7 +46,7 @@ main{max-width:1180px;margin:auto;padding:22px 16px 50px}.notice{background:#fff
 <div class="stat"><b>~225 กม.</b><span>ช่วงขับรถหลัก Day 4 ตามแผน</span></div>
 <div class="stat"><b>รถเช่า</b><span>รับรถที่ New Chitose Airport</span></div>
 </div>
-<div class="section-title"><h2>🗺️ แผนที่สถานที่ทั้งหมด</h2><small>แตะหมุดเพื่อดูชื่อและเปิดแผนที่จริง</small></div>
+<div class="maps-tools"><input id="placeSearch" type="search" placeholder="ค้นหาสถานที่ เช่น Blue Pond, Otaru Canal"><button id="searchGoogle" type="button">🔎 ค้นหาใน Google Maps</button><button id="dayGoogle" type="button" class="secondary">🚗 นำทางทั้งวัน</button></div><div class="section-title"><h2>🗺️ แผนที่สถานที่ทั้งหมด</h2><small>แตะหมุดเพื่อดูชื่อและเปิดแผนที่จริง</small></div>
 <div class="layout">
 <section class="panel"><div class="panel-head"><h3>แผนที่เส้นทางฮอกไกโด</h3><small>OpenStreetMap</small></div><div id="map" aria-label="แผนที่สถานที่ท่องเที่ยวฮอกไกโด"></div><div class="map-foot">เส้นเชื่อมเป็นภาพรวมเส้นทาง ไม่ใช่คำแนะนำเลี้ยวแบบนำทางสด · กด “นำทาง” ในแต่ละจุดเพื่อเปิด Google Maps</div></section>
 <section class="panel"><div class="panel-head"><h3>📍 รายละเอียดรายวัน</h3><small>เลือกวันเพื่อดูตาราง</small></div><div class="day-summary" id="daySummary"></div><div class="daybar" id="dayButtons"></div><div id="stops"></div></section>
@@ -59,21 +59,21 @@ main{max-width:1180px;margin:auto;padding:22px 16px 50px}.notice{background:#fff
 <div class="section-title"><h2>🧤 เช็กลิสต์ก่อนออกเดินทาง</h2></div>
 <div class="panel" style="padding:15px 18px">
 <label><input type="checkbox"> เสื้อกันหนาวหลายชั้น / หมวก / ถุงมือ / ผ้าพันคอ</label><br><br>
-<label><input type="checkbox"> ใบขับขี่สากลและเอกสารรถเช่า / ประกันภัย</label><br><br>
-<label><input type="checkbox"> ตรวจยางฤดูหนาว อุปกรณ์ ETC และเงื่อนไขประกันรถเช่า</label><br><br>
-<label><input type="checkbox"> เงินสด บัตร IC โทรศัพท์ กล้อง และ Power bank</label><br><br>
-<label><input type="checkbox"> ตรวจพยากรณ์หิมะ น้ำแข็ง และประกาศปิดถนนทุกเช้า</label>
+<label><input class="trip-check" type="checkbox"> ใบขับขี่สากลและเอกสารรถเช่า / ประกันภัย</label><br><br>
+<label><input class="trip-check" type="checkbox"> ตรวจยางฤดูหนาว อุปกรณ์ ETC และเงื่อนไขประกันรถเช่า</label><br><br>
+<label><input class="trip-check" type="checkbox"> เงินสด บัตร IC โทรศัพท์ กล้อง และ Power bank</label><br><br>
+<label><input class="trip-check" type="checkbox"> ตรวจพยากรณ์หิมะ น้ำแข็ง และประกาศปิดถนนทุกเช้า</label>
 </div>
 
 <div class="section-title" id="smart-parking"><h2>🅿️ Smart Parking</h2><small>ค้นหาลานจอดใกล้จุดหมาย</small></div>
 <section class="panel">
- <div class="panel-head"><h3>ค้นหาที่จอดรถรอบสถานที่</h3><small>OpenStreetMap</small></div>
+ <div class="panel-head"><h3>ค้นหาที่จอดรถรอบสถานที่</h3><a class="linkbtn" id="parkingGoogle" target="_blank" rel="noopener">ค้นหาใน Google Maps ↗</a></div>
  <div class="parking-controls">
   <select id="parkingDestination" aria-label="เลือกสถานที่"></select>
   <select id="parkingRadius" aria-label="รัศมีค้นหา"><option value="1000">รัศมี 1 กม.</option><option value="2000" selected>รัศมี 2 กม.</option><option value="3000">รัศมี 3 กม.</option><option value="5000">รัศมี 5 กม.</option></select>
   <button id="parkingSearch" type="button">ค้นหาที่จอด</button>
  </div>
- <div style="padding:10px 16px;background:#fff9e9;color:#74551b;font-size:12px;line-height:1.6" id="parkingNotice">สถานะว่างแบบเรียลไทม์จะแสดงเฉพาะเมื่อแหล่งข้อมูลรองรับเท่านั้น ขณะนี้ระบบค้นหาลานจอดจาก OpenStreetMap และแสดงราคา/เงื่อนไขที่มีการบันทึกไว้ โดยไม่สมมติจำนวนช่องว่าง</div>
+ <div style="padding:10px 16px;background:#fff9e9;color:#74551b;font-size:12px;line-height:1.6" id="parkingNotice">ค้นหาตำแหน่งลานจอดจาก OpenStreetMap และเปิดค้นหาซ้ำใน Google Maps ได้ ราคา/เวลาเปิดแสดงเมื่อมีข้อมูลเท่านั้น สถานะว่างไม่ใช่ข้อมูลเรียลไทม์</div>
  <div id="parkingMap" style="height:380px;background:#e4eef3"></div>
  <div id="parkingSummary" style="padding:11px 16px;color:var(--muted);font-size:12px">เลือกสถานที่แล้วกดค้นหา</div>
  <div id="parkingResults"><div style="padding:18px;color:var(--muted);font-size:13px">ผลการค้นหาจะแสดงตรงนี้</div></div>
@@ -103,6 +103,10 @@ function renderDay(i){current=i;document.querySelectorAll('.daybtn').forEach((b,
 document.getElementById('dayButtons').innerHTML=dayNames.map((n,i)=>`<button class="daybtn" type="button" data-day="${i}">${n}</button>`).join('');
 document.querySelectorAll('.daybtn').forEach(b=>b.addEventListener('click',()=>renderDay(Number(b.dataset.day))));
 renderDay(1);
+document.getElementById('searchGoogle').addEventListener('click',()=>{const q=document.getElementById('placeSearch').value.trim();if(q)window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q+' Hokkaido Japan'),'_blank','noopener');else document.getElementById('placeSearch').focus()});
+document.getElementById('placeSearch').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('searchGoogle').click()});
+document.getElementById('dayGoogle').addEventListener('click',()=>{const a=days[current].stops.filter(s=>typeof s[3]==='number');if(!a.length)return;const f=a[0],l=a[a.length-1],w=a.slice(1,-1).map(s=>s[3]+','+s[4]).join('|');const u='https://www.google.com/maps/dir/?api=1&origin='+f[3]+','+f[4]+'&destination='+l[3]+','+l[4]+(w?'&waypoints='+encodeURIComponent(w):'')+'&travelmode=driving';window.open(u,'_blank','noopener')});
+const checks=[...document.querySelectorAll('.trip-check')];function updateCheckProgress(){const n=checks.filter(c=>c.checked).length;document.getElementById('checkProgress').textContent='ทำแล้ว '+n+'/'+checks.length+' รายการ'}checks.forEach((c,i)=>{c.checked=localStorage.getItem('hokkaido-check-'+i)==='1';c.addEventListener('change',()=>{localStorage.setItem('hokkaido-check-'+i,c.checked?'1':'0');updateCheckProgress()})});updateCheckProgress();
 const routes=[
 ["CTS → Hill of the Buddha","ประมาณ 40 กม. · 1 ชม.","New Chitose Airport","Hill of the Buddha"],
 ["Hill of the Buddha → Hokkaido Jingu","ประมาณ 27 กม. · 40 นาที","Hill of the Buddha","Hokkaido Jingu"],
@@ -132,7 +136,7 @@ let layers=L.layerGroup().addTo(pmap);
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function dist(a,b,c,d){const R=6371000,x=(c-a)*Math.PI/180,y=(d-b)*Math.PI/180;const q=Math.sin(x/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
 function price(t){const vals=[t.charge,t.fee,t['parking:condition:fee']].filter(Boolean);return vals.length?vals.join(' · '):(t.fee==='no'?'ฟรี':'ไม่มีข้อมูลราคา')}
-function status(t){if(t['capacity:disabled']||t['capacity:charging']){} if(t['capacity:available'])return {label:'มีข้อมูลช่องว่าง',cls:'live'};if(t['check_date']||t['survey:date'])return {label:'ข้อมูลล่าสุด/สำรวจ',cls:'latest'};return {label:'ไม่ทราบสถานะว่าง',cls:'unknown'}}
+function status(t){if(t['capacity:disabled']||t['capacity:charging']){} if(t['capacity:available'])return {label:'มีแท็กข้อมูลช่องว่าง (ไม่ใช่ข้อมูลสด)',cls:'latest'};if(t['check_date']||t['survey:date'])return {label:'ข้อมูลล่าสุด/สำรวจ',cls:'latest'};return {label:'ไม่ทราบสถานะว่าง',cls:'unknown'}}
 async function search(){
  const p=places[Number(sel.value)],radius=Number(rad.value);btn.disabled=true;btn.textContent='กำลังค้นหา…';summary.textContent='กำลังค้นหาลานจอดในรัศมี '+(radius/1000)+' กม.';results.innerHTML='<div style="padding:16px">กำลังโหลดข้อมูลจาก OpenStreetMap…</div>';layers.clearLayers();
  const query='[out:json][timeout:25];(node["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+');way["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+');relation["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+'););out center tags;';
@@ -148,7 +152,7 @@ async function search(){
  finally{btn.disabled=false;btn.textContent='ค้นหาที่จอด'}
 }
 btn.addEventListener('click',search);sel.addEventListener('change',()=>{const p=places[Number(sel.value)];pmap.setView([p.lat,p.lon],14);layers.clearLayers();L.marker([p.lat,p.lon]).addTo(layers).bindPopup('จุดหมาย: '+p.name).openPopup()});
-const defaultIndex=places.findIndex(p=>p.name==='Otaru Canal');sel.value=String(defaultIndex);setTimeout(()=>{const p=places[defaultIndex];pmap.setView([p.lat,p.lon],14);L.marker([p.lat,p.lon]).addTo(layers).bindPopup('จุดหมาย: '+p.name)},250);
+function updateParkingGoogle(){const p=places[Number(sel.value)];document.getElementById('parkingGoogle').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('parking near '+p.name+' Hokkaido Japan')}sel.addEventListener('change',updateParkingGoogle);const defaultIndex=places.findIndex(p=>p.name==='Otaru Canal');sel.value=String(defaultIndex);updateParkingGoogle();setTimeout(()=>{const p=places[defaultIndex];pmap.setView([p.lat,p.lon],14);L.marker([p.lat,p.lon]).addTo(layers).bindPopup('จุดหมาย: '+p.name)},250);
 })();
 
 </script>
