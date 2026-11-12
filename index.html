@@ -61,6 +61,64 @@ main{max-width:1180px;margin:auto;padding:22px 16px 50px}.notice{background:#fff
  #smart-parking+section.panel .parking-controls button{grid-column:1/-1;width:100%}
  #parkingMap{height:300px!important}
 }
+
+/* Hokkaido premium UI refresh */
+:root{--ink:#142b2a;--muted:#637674;--blue:#245e59;--ice:#edf5f1;--paper:#fff;--line:#d9e5df;--green:#16734f}
+body{background:#eef3ef;color:#19312d;font-family:Inter,system-ui,-apple-system,"Noto Sans Thai",sans-serif}
+header{background:linear-gradient(120deg,#102e2b 0%,#1d5148 58%,#638a73 100%);padding-top:36px;padding-bottom:38px}
+header:after{color:#d9f1e5;opacity:.09}
+.kicker{color:#c5e4d3;letter-spacing:.18em}
+.hero h1{letter-spacing:-.035em;font-weight:850}
+.pill{background:#d9b875;color:#263b31;box-shadow:0 5px 18px #081c1833}
+main{max-width:1240px;padding-top:28px}
+.notice{background:#fffaf0;border:1px solid #ead9b5;color:#69542e;border-radius:13px}
+.stat,.panel,.weather-card,.route,.maps-tools{border:1px solid #dce7e0;box-shadow:0 5px 20px rgba(24,54,43,.045)}
+.stat{border-radius:16px;padding:17px}
+.stat b{color:#236b54}
+.section-title{margin-top:32px}
+.section-title h2{font-size:clamp(20px,2.5vw,25px);letter-spacing:-.02em}
+.panel{border-radius:18px}
+.panel-head{padding:17px 19px;background:linear-gradient(180deg,#fff,#fbfdfb)}
+.panel-head h3{font-weight:800}
+.daybtn{border-radius:11px;transition:.18s ease}
+.daybtn.active{background:#205f50;border-color:#205f50}
+.day-summary{background:#f0f7f2}
+.time{color:#286b53;background:#e8f4ec}
+.weather-card,.route{border-radius:15px}
+.actions a,.linkbtn{border-radius:9px}
+.maps-tools{padding:14px;border-radius:15px}
+.maps-tools input:focus,.parking-controls select:focus{outline:3px solid #b6ddc7;outline-offset:1px}
+#smart-parking+section.panel{border:1px solid #c9e2d2;background:#f5fbf6;box-shadow:0 12px 34px rgba(23,87,58,.09)}
+#smart-parking+section.panel .panel-head{background:linear-gradient(110deg,#e0f2e6,#f6fbf7);padding:19px 20px}
+#smart-parking+section.panel .panel-head h3{font-size:18px;color:#174c39}
+#smart-parking+section.panel .linkbtn{border:1px solid #b5d7c2;background:#fff;color:#176343;padding:9px 12px}
+#smart-parking+section.panel .parking-controls{padding:16px;background:#edf7f0;gap:10px}
+#smart-parking+section.panel .parking-controls select{border:1px solid #c5ddcd;border-radius:11px;padding:12px;background:#fff;color:#234536;min-height:48px}
+#smart-parking+section.panel .parking-controls button{border-radius:11px;background:linear-gradient(135deg,#18734d,#239563);padding:12px 20px;font-weight:800;min-height:48px}
+#parkingNotice{padding:12px 17px!important;background:#e8f5ec!important;color:#315e45!important;font-size:12px!important}
+#parkingMap{height:360px!important;background:#e5eee8!important}
+#parkingSummary{padding:13px 17px!important;background:#f1f8f3;color:#27533c!important;font-weight:700}
+#parkingResults{background:#f6fbf7;padding:10px}
+#parkingResults .parking-result{margin:8px 0;padding:16px;border:1px solid #dfebe2;border-radius:13px;background:#fff;box-shadow:0 3px 12px rgba(27,71,48,.04);grid-template-columns:minmax(0,1fr) auto}
+#parkingResults .parking-result h4{font-size:15px;color:#174c39;margin-bottom:7px}
+#parkingResults .parking-result p{font-size:12px;line-height:1.55;color:#61736a}
+#parkingResults .parking-result a{border:1px solid #d2e7d9;border-radius:8px;padding:7px 10px;margin-top:9px;color:#176b46;background:#f5fbf6}
+#parkingResults .parking-result .status{white-space:normal;max-width:150px;text-align:center;line-height:1.35}
+#parkingResults .parking-result .status.unknown{background:#f0f2ef;color:#5e6b62}
+#parkingResults .parking-result .status.latest{background:#e4f4e9;color:#176b46}
+.parking-meta{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+.parking-chip{font-size:11px;color:#426454;background:#eef6f0;border:1px solid #dfebe2;border-radius:30px;padding:4px 8px}
+.parking-empty{padding:22px 16px;text-align:center;color:#5e7568;background:#fff;border-radius:12px;line-height:1.7}
+@media(max-width:560px){
+ main{padding:14px 10px 32px}
+ header{padding:24px 16px}
+ #smart-parking+section.panel .panel-head{align-items:flex-start;flex-wrap:wrap}
+ #smart-parking+section.panel .parking-controls{grid-template-columns:1fr 1fr;padding:12px}
+ #smart-parking+section.panel .parking-controls button{grid-column:1/-1;width:100%}
+ #parkingMap{height:300px!important}
+ #parkingResults .parking-result{grid-template-columns:1fr}
+ #parkingResults .parking-result .status{justify-self:start;max-width:none}
+}
 </style>
 </head>
 <body>
@@ -163,22 +221,45 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,att
 let layers=L.layerGroup().addTo(pmap);
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function dist(a,b,c,d){const R=6371000,x=(c-a)*Math.PI/180,y=(d-b)*Math.PI/180;const q=Math.sin(x/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
-function price(t){const vals=[t.charge,t.fee,t['parking:condition:fee']].filter(Boolean);return vals.length?vals.join(' · '):(t.fee==='no'?'ฟรี':'ไม่มีข้อมูลราคา')}
-function status(t){if(t['capacity:disabled']||t['capacity:charging']){} if(t['capacity:available'])return {label:'มีแท็กข้อมูลช่องว่าง (ไม่ใช่ข้อมูลสด)',cls:'latest'};if(t['check_date']||t['survey:date'])return {label:'ข้อมูลล่าสุด/สำรวจ',cls:'latest'};return {label:'ไม่ทราบสถานะว่าง',cls:'unknown'}}
+function price(t){
+ const fee=String(t.fee||'').toLowerCase(),charge=t.charge||t['parking:condition:fee'];
+ if(fee==='no')return 'ฟรี (ตามข้อมูลแผนที่)';
+ if(charge)return String(charge);
+ if(fee==='yes')return 'มีค่าจอด · ไม่ระบุราคา';
+ return 'ไม่มีข้อมูลราคา';
+}
+function status(t){
+ if(t['capacity:available'])return {label:'มีข้อมูลจำนวนช่องจากแผนที่ · ไม่ใช่ข้อมูลสด',cls:'latest'};
+ if(t['check_date']||t['survey:date'])return {label:'มีวันที่ตรวจสอบข้อมูล',cls:'latest'};
+ return {label:'ไม่ทราบสถานะช่องว่าง',cls:'unknown'};
+}
+function parkingType(t){
+ const a=t.amenity||'parking',b=t.parking||'';
+ return b==='multi-storey'?'อาคารจอดรถ':b==='underground'?'ที่จอดรถใต้ดิน':b==='surface'?'ลานจอดกลางแจ้ง':a==='parking'?'ลานจอดรถ':'ที่จอดรถ';
+}
+function parkingAddress(t){
+ return [t['addr:street'],t['addr:suburb'],t['addr:city']].filter(Boolean).join(', ');
+}
 async function search(){
  const p=places[Number(sel.value)],radius=Number(rad.value);try{pmap.invalidateSize()}catch(e){}btn.disabled=true;btn.textContent='กำลังค้นหา…';summary.textContent='กำลังค้นหาลานจอดในรัศมี '+(radius/1000)+' กม.';results.innerHTML='<div style="padding:16px">กำลังโหลดข้อมูลจาก OpenStreetMap…</div>';layers.clearLayers();
  const query='[out:json][timeout:25];(node["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+');way["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+');relation["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+'););out center tags;';
  try{
   let data=null,lastError=null;const endpoints=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter'];for(const endpoint of endpoints){try{const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query)});if(!response.ok)throw Error('HTTP '+response.status);data=await response.json();break}catch(err){lastError=err}}if(!data)throw Error(lastError?.message||'ไม่สามารถเชื่อมต่อฐานข้อมูลแผนที่ได้');const list=(data.elements||[]).map(e=>{const t=e.tags||{},lat=e.lat??e.center?.lat,lon=e.lon??e.center?.lon;if(!lat||!lon)return null;return {name:t.name||t['name:en']||t.operator||'ลานจอดรถ (ไม่มีชื่อ)',lat,lon,t,d:dist(p.lat,p.lon,lat,lon)}}).filter(Boolean).sort((a,b)=>a.d-b.d);
   summary.textContent='พบ '+list.length+' ลานจอด · ใกล้ '+p.name+' · ระยะเดินโดยประมาณคำนวณจากระยะเส้นตรง';
-  if(!list.length){results.innerHTML='<div style="padding:16px">ไม่พบข้อมูลลานจอดในรัศมีนี้ ลองขยายรัศมีค้นหาได้ครับ</div>';return}
-  results.innerHTML=list.slice(0,35).map((x,i)=>{const s=status(x.t),walk=Math.max(1,Math.round(x.d/75)),charge=price(x.t),hours=x.t.opening_hours||'ไม่มีข้อมูลเวลาเปิด',cap=x.t.capacity||'ไม่ระบุ',fee=x.t.fee==='no'?'ไม่มีค่าจอดตามข้อมูลแผนที่':charge;const nav='https://www.google.com/maps/dir/?api=1&destination='+x.lat+','+x.lon+'&travelmode=driving';const walkurl='https://www.google.com/maps/dir/?api=1&origin='+x.lat+','+x.lon+'&destination='+p.lat+','+p.lon+'&travelmode=walking';return '<article class="parking-result"><div><h4>'+(i+1)+'. '+esc(x.name)+'</h4><p>ห่าง '+(x.d<1000?Math.round(x.d)+' ม.':(x.d/1000).toFixed(1)+' กม.')+' · เดินประมาณ '+walk+' นาที</p><p>ราคา: '+esc(fee)+'</p><p>เวลาเปิด: '+esc(hours)+' · ความจุ: '+esc(cap)+' ช่อง</p><p>ข้อจำกัดรถ: '+esc(x.t.maxheight||x.t.maxwidth||'ตรวจสอบป้ายหน้างาน')+'</p><a target="_blank" rel="noopener" href="'+nav+'">🚗 นำทางไปลานจอด</a><a target="_blank" rel="noopener" href="'+walkurl+'">🚶 เส้นทางเดินไปจุดหมาย</a></div><span class="status '+s.cls+'">'+s.label+'</span></article>'}).join('');
+  if(!list.length){results.innerHTML='<div class="parking-empty">ยังไม่พบข้อมูลลานจอดในรัศมีนี้<br>ลองขยายรัศมีค้นหา หรือเปิด Google Maps เพื่อค้นหาเพิ่มเติม</div>';return}
+  results.innerHTML=list.slice(0,35).map((x,i)=>{
+ const t=x.t,s=status(t),walk=Math.max(1,Math.round(x.d/75)),fee=price(t),hours=t.opening_hours||'ไม่ระบุเวลาเปิด',cap=t.capacity||'ไม่ระบุจำนวนช่อง',operator=t.operator||'',addr=parkingAddress(t),type=parkingType(t),surface=t.surface||'',height=t.maxheight||'',access=t.access||'';
+ const nav='https://www.google.com/maps/dir/?api=1&destination='+x.lat+','+x.lon+'&travelmode=driving';
+ const walkurl='https://www.google.com/maps/dir/?api=1&origin='+x.lat+','+x.lon+'&destination='+p.lat+','+p.lon+'&travelmode=walking';
+ const chips=[type,cap!=='ไม่ระบุจำนวนช่อง'?'ความจุ '+cap+' ช่อง':'',t.covered==='yes'?'มีหลังคา':'',t.wheelchair==='yes'?'รองรับรถเข็น':''].filter(Boolean).map(v=>'<span class="parking-chip">'+esc(v)+'</span>').join('');
+ return '<article class="parking-result"><div><h4>'+String(i+1).padStart(2,'0')+' · '+esc(x.name)+'</h4><div class="parking-meta">'+chips+'</div><p>📍 '+(x.d<1000?Math.round(x.d)+' ม.':(x.d/1000).toFixed(1)+' กม.')+' จากจุดหมาย · เดินประมาณ '+walk+' นาที (ประเมินจากระยะเส้นตรง)</p><p>💴 ราคา: <b>'+esc(fee)+'</b></p><p>🕒 เวลาเปิด: '+esc(hours)+'</p>'+(operator?'<p>🏢 ผู้ให้บริการ: '+esc(operator)+'</p>':'')+(addr?'<p>📌 ที่อยู่: '+esc(addr)+'</p>':'')+(surface?'<p>พื้นผิว: '+esc(surface)+'</p>':'')+(height?'<p>ความสูงรถสูงสุด: '+esc(height)+'</p>':'')+(access?'<p>เงื่อนไขการเข้าใช้: '+esc(access)+'</p>':'')+'<a target="_blank" rel="noopener" href="'+nav+'">🚗 นำทางไปลานจอด</a><a target="_blank" rel="noopener" href="'+walkurl+'">🚶 เส้นทางเดินไปจุดหมาย</a></div><span class="status '+s.cls+'">'+s.label+'</span></article>';
+}).join('');
   const bounds=[];list.slice(0,35).forEach((x,i)=>{const s=status(x.t),m=L.marker([x.lat,x.lon]).bindPopup('<b>'+esc(x.name)+'</b><br>'+Math.round(x.d)+' ม. จากจุดหมาย<br>'+esc(price(x.t))+'<br>'+s.label);m.addTo(layers);bounds.push([x.lat,x.lon])});L.marker([p.lat,p.lon]).addTo(layers).bindPopup('<b>จุดหมาย: '+esc(p.name)+'</b>');bounds.push([p.lat,p.lon]);pmap.fitBounds(bounds,{padding:[25,25],maxZoom:15});
  }catch(e){summary.textContent='ค้นหาข้อมูลไม่สำเร็จ';results.innerHTML='<div style="padding:16px;color:#9b3b3b">ไม่สามารถเชื่อมต่อฐานข้อมูลที่จอดรถได้ในขณะนี้ ('+esc(e.message)+') ลองใหม่ภายหลัง หรือเปิด Google Maps เพื่อค้นหาลานจอดใกล้จุดหมาย</div>'}
  finally{btn.disabled=false;btn.textContent='ค้นหาที่จอด'}
 }
 btn.addEventListener('click',search);sel.addEventListener('change',()=>{const p=places[Number(sel.value)];try{pmap.invalidateSize();pmap.setView([p.lat,p.lon],14);layers.clearLayers();L.marker([p.lat,p.lon]).addTo(layers).bindPopup('จุดหมาย: '+p.name).openPopup()}catch(e){summary.textContent='กำลังเตรียมแผนที่ กรุณาลองอีกครั้ง'}});
-function updateParkingGoogle(){const p=places[Number(sel.value)];document.getElementById('parkingGoogle').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('parking near '+p.name+' Hokkaido Japan')}sel.addEventListener('change',updateParkingGoogle);const defaultIndex=places.findIndex(p=>p.name==='Otaru Canal');sel.value=String(defaultIndex);updateParkingGoogle();setTimeout(()=>{const p=places[defaultIndex];try{pmap.invalidateSize();pmap.setView([p.lat,p.lon],14);L.marker([p.lat,p.lon]).addTo(layers).bindPopup('จุดหมาย: '+p.name)}catch(e){}},500);
+function updateParkingGoogle(){const p=places[Number(sel.value)];document.getElementById('parkingGoogle').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('parking near '+p.name+' Hokkaido Japan')}sel.addEventListener('change',updateParkingGoogle);const defaultIndex=places.findIndex(p=>p.name==='Otaru Canal');sel.value=String(defaultIndex);updateParkingGoogle();setTimeout(()=>{const p=places[defaultIndex];try{pmap.invalidateSize();pmap.setView([p.lat,p.lon],14);L.marker([p.lat,p.lon]).addTo(layers).bindPopup('จุดหมาย: '+p.name)}catch(e){}search()},800);
 })();
 
 </script>
