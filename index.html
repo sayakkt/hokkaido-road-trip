@@ -2,8 +2,8 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hokkaido Road Trip • 9–15 Nov 2026</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173f36"><meta name="color-scheme" content="light">
+<title>Hokkaido Road Trip • Premium Edition</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <style>
 :root{--ink:#17263b;--muted:#617187;--pink:#e94e83;--blue:#287bb8;--ice:#eaf5fc;--paper:#fff;--line:#dce7ef;--green:#287b65}
@@ -119,6 +119,35 @@ main{max-width:1240px;padding-top:28px}
  #parkingResults .parking-result{grid-template-columns:1fr}
  #parkingResults .parking-result .status{justify-self:start;max-width:none}
 }
+
+/* Premium theme hotfix: explicit light palette for mobile browsers */
+:root{color-scheme:light!important;--ink:#19312d!important;--muted:#63766d!important;--blue:#245e59!important;--ice:#edf5f1!important;--paper:#ffffff!important;--line:#d9e5df!important;--green:#16734f!important}
+html,body{background:#eef3ef!important;color:#19312d!important}
+body{font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif!important}
+header{background:linear-gradient(120deg,#102e2b 0%,#1d5148 58%,#638a73 100%)!important;color:#fff!important;padding-top:36px!important;padding-bottom:38px!important}
+header .kicker{color:#c5e4d3!important}
+header .hero p{color:#e5f2eb!important}
+header .pill{background:#d9b875!important;color:#263b31!important}
+main{background:transparent!important}
+.stat,.panel,.weather-card,.route,.maps-tools{background:#fff!important;color:#19312d!important;border-color:#dce7e0!important;box-shadow:0 5px 20px rgba(24,54,43,.06)!important}
+.stat span,.section-title small,.note,.map-foot{color:#63766d!important}
+.stat b{color:#236b54!important}
+.notice{background:#fffaf0!important;color:#69542e!important;border-color:#ead9b5!important}
+.panel-head{background:#fbfdfb!important;color:#19312d!important}
+.daybtn{background:#fff!important;color:#19312d!important}
+.daybtn.active{background:#205f50!important;color:#fff!important}
+.day-summary{background:#f0f7f2!important}
+#smart-parking+section.panel{background:#f5fbf6!important;border:1px solid #c9e2d2!important}
+#smart-parking+section.panel .panel-head{background:linear-gradient(110deg,#e0f2e6,#f6fbf7)!important}
+#smart-parking+section.panel .parking-controls{background:#edf7f0!important}
+#smart-parking+section.panel .parking-controls select{background:#fff!important;color:#234536!important}
+#smart-parking+section.panel .parking-controls button{background:linear-gradient(135deg,#18734d,#239563)!important;color:#fff!important}
+#parkingNotice{background:#e8f5ec!important;color:#315e45!important}
+#parkingSummary{background:#f1f8f3!important;color:#27533c!important}
+#parkingResults{background:#f6fbf7!important}
+#parkingResults .parking-result{background:#fff!important;color:#19312d!important}
+#parkingResults .parking-result p{color:#61736a!important}
+@media(max-width:560px){header{padding:24px 16px!important}}
 </style>
 </head>
 <body>
