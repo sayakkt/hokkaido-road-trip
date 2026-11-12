@@ -22,6 +22,18 @@ main{max-width:1180px;margin:auto;padding:22px 16px 50px}.notice{background:#fff
 .note{font-size:12px;color:var(--muted);line-height:1.65}.footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center}
 @media(max-width:850px){.layout{grid-template-columns:1fr}#map{height:390px}.stats{grid-template-columns:repeat(2,1fr)}.weather-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:480px){main{padding:15px 10px 35px}.weather-grid{grid-template-columns:repeat(2,1fr)}.route-list{grid-template-columns:1fr}.stop{grid-template-columns:52px 1fr}header{padding:24px 16px}}
+
+.parking-controls{display:grid;grid-template-columns:1.5fr 1fr auto;gap:9px;padding:14px 16px;background:#f4f9fc;border-bottom:1px solid var(--line)}
+.parking-controls select,.parking-controls button{min-width:0;border:1px solid #cbdbe6;border-radius:9px;padding:10px;background:white;color:var(--ink);font:inherit}
+.parking-controls button{background:var(--blue);color:white;font-weight:800;border:0;cursor:pointer}
+.parking-result{padding:13px 16px;border-bottom:1px solid #edf1f4;display:grid;grid-template-columns:1fr auto;gap:8px}
+.parking-result h4{margin:0 0 4px;font-size:15px}.parking-result p{margin:3px 0;color:var(--muted);font-size:12px}
+.parking-result .status{font-size:11px;font-weight:800;border-radius:20px;padding:4px 8px;background:#eef2f5;height:max-content}
+.parking-result .status.live{background:#e4f5ed;color:#176847}.parking-result .status.latest{background:#fff4dc;color:#805b12}
+.parking-result .status.unknown{background:#edf1f4;color:#566779}
+.parking-result a{display:inline-block;margin:5px 6px 0 0;font-size:12px;color:#176da6;text-decoration:none;font-weight:750}
+@media(max-width:560px){.parking-controls{grid-template-columns:1fr 1fr}.parking-controls button{grid-column:1/-1}}
+
 </style>
 </head>
 <body>
@@ -52,6 +64,21 @@ main{max-width:1180px;margin:auto;padding:22px 16px 50px}.notice{background:#fff
 <label><input type="checkbox"> เงินสด บัตร IC โทรศัพท์ กล้อง และ Power bank</label><br><br>
 <label><input type="checkbox"> ตรวจพยากรณ์หิมะ น้ำแข็ง และประกาศปิดถนนทุกเช้า</label>
 </div>
+
+<div class="section-title" id="smart-parking"><h2>🅿️ Smart Parking</h2><small>ค้นหาลานจอดใกล้จุดหมาย</small></div>
+<section class="panel">
+ <div class="panel-head"><h3>ค้นหาที่จอดรถรอบสถานที่</h3><small>OpenStreetMap</small></div>
+ <div class="parking-controls">
+  <select id="parkingDestination" aria-label="เลือกสถานที่"></select>
+  <select id="parkingRadius" aria-label="รัศมีค้นหา"><option value="1000">รัศมี 1 กม.</option><option value="2000" selected>รัศมี 2 กม.</option><option value="3000">รัศมี 3 กม.</option><option value="5000">รัศมี 5 กม.</option></select>
+  <button id="parkingSearch" type="button">ค้นหาที่จอด</button>
+ </div>
+ <div style="padding:10px 16px;background:#fff9e9;color:#74551b;font-size:12px;line-height:1.6" id="parkingNotice">สถานะว่างแบบเรียลไทม์จะแสดงเฉพาะเมื่อแหล่งข้อมูลรองรับเท่านั้น ขณะนี้ระบบค้นหาลานจอดจาก OpenStreetMap และแสดงราคา/เงื่อนไขที่มีการบันทึกไว้ โดยไม่สมมติจำนวนช่องว่าง</div>
+ <div id="parkingMap" style="height:380px;background:#e4eef3"></div>
+ <div id="parkingSummary" style="padding:11px 16px;color:var(--muted);font-size:12px">เลือกสถานที่แล้วกดค้นหา</div>
+ <div id="parkingResults"><div style="padding:18px;color:var(--muted);font-size:13px">ผลการค้นหาจะแสดงตรงนี้</div></div>
+</section>
+
 <div class="footer">จัดทำจากกำหนดการที่ผู้ใช้ส่งมา · แผนที่ © OpenStreetMap contributors · พยากรณ์อากาศโดย Open-Meteo</div>
 </main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -92,5 +119,37 @@ const wg=document.getElementById('weatherGrid');
 function showWeather(rows,status){wg.innerHTML=rows.map(x=>`<div class="weather-card"><b>${x[0]}</b><div class="icon">${x[2]}</div><strong>${x[1]}</strong><small>${x[3]}</small></div>`).join('');document.getElementById('weatherStatus').textContent=status;}
 showWeather(weatherFallback,'ค่าอ้างอิงจากภาพแผนเที่ยว');
 (async()=>{try{const u='https://api.open-meteo.com/v1/forecast?latitude=43.06&longitude=141.35&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code&timezone=Asia%2FTokyo&forecast_days=16';const r=await fetch(u);if(!r.ok)throw Error('forecast unavailable');const j=await r.json();const dates=['2026-11-09','2026-11-10','2026-11-11','2026-11-12','2026-11-13','2026-11-14','2026-11-15'];const rows=dates.map((date,i)=>{const k=j.daily.time.indexOf(date);if(k<0)return weatherFallback[i];const code=j.daily.weather_code[k];const icon=code>=71?'❄️':code>=51?'🌧️':code>=3?'☁️':'🌤️';return [weatherFallback[i][0],`${Math.round(j.daily.temperature_2m_min[k])}° / ${Math.round(j.daily.temperature_2m_max[k])}°`,icon,`${weatherFallback[i][3]} · ฝน ${j.daily.precipitation_probability_max[k]??'—'}%`];});showWeather(rows,'อัปเดตจาก Open-Meteo · Sapporo (ค่าพยากรณ์อาจเปลี่ยนได้)');}catch(e){document.getElementById('weatherStatus').textContent='แสดงค่าอ้างอิงจากภาพ · ไม่สามารถดึงข้อมูลสดได้ในขณะนี้';}})();
+
+(function(){
+const places=[
+{name:"Hill of the Buddha",lat:42.9206,lon:141.3628},{name:"Hokkaido Jingu",lat:43.0545,lon:141.3075},{name:"Maruyama Park",lat:43.0558,lon:141.3135},{name:"Susukino",lat:43.0554,lon:141.3541},{name:"Nijo Market",lat:43.0585,lon:141.3586},{name:"Sapporo Clock Tower",lat:43.0626,lon:141.3535},{name:"Odori Park",lat:43.0606,lon:141.3520},{name:"Shiroi Koibito Park",lat:43.0889,lon:141.2717},{name:"Sapporo Factory",lat:43.0675,lon:141.3610},{name:"Sapporo Beer Museum",lat:43.0717,lon:141.3668},{name:"Noboribetsu Jigokudani",lat:42.4925,lon:141.1450},{name:"Marine Park NIXE",lat:42.4525,lon:141.1780},{name:"Otaru Canal",lat:43.2000,lon:141.0015},{name:"Asari Station",lat:43.1430,lon:141.0360},{name:"Biei Christmas Tree",lat:43.5880,lon:142.4660},{name:"Shirahige Waterfall",lat:43.4739,lon:142.6390},{name:"Blue Pond (Aoiike)",lat:43.4912,lon:142.6140},{name:"Asahidake Ropeway",lat:43.6630,lon:142.7880},{name:"Furano",lat:43.3233,lon:142.3563},{name:"New Chitose Airport",lat:42.7752,lon:141.6923}
+];
+const sel=document.getElementById('parkingDestination'),rad=document.getElementById('parkingRadius'),btn=document.getElementById('parkingSearch'),results=document.getElementById('parkingResults'),summary=document.getElementById('parkingSummary');
+places.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.textContent=p.name;sel.appendChild(o)});
+const pmap=L.map('parkingMap').setView([43.06,141.35],11);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(pmap);
+let layers=L.layerGroup().addTo(pmap);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function dist(a,b,c,d){const R=6371000,x=(c-a)*Math.PI/180,y=(d-b)*Math.PI/180;const q=Math.sin(x/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
+function price(t){const vals=[t.charge,t.fee,t['parking:condition:fee']].filter(Boolean);return vals.length?vals.join(' · '):(t.fee==='no'?'ฟรี':'ไม่มีข้อมูลราคา')}
+function status(t){if(t['capacity:disabled']||t['capacity:charging']){} if(t['capacity:available'])return {label:'มีข้อมูลช่องว่าง',cls:'live'};if(t['check_date']||t['survey:date'])return {label:'ข้อมูลล่าสุด/สำรวจ',cls:'latest'};return {label:'ไม่ทราบสถานะว่าง',cls:'unknown'}}
+async function search(){
+ const p=places[Number(sel.value)],radius=Number(rad.value);btn.disabled=true;btn.textContent='กำลังค้นหา…';summary.textContent='กำลังค้นหาลานจอดในรัศมี '+(radius/1000)+' กม.';results.innerHTML='<div style="padding:16px">กำลังโหลดข้อมูลจาก OpenStreetMap…</div>';layers.clearLayers();
+ const query='[out:json][timeout:25];(node["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+');way["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+');relation["amenity"="parking"](around:'+radius+','+p.lat+','+p.lon+'););out center tags;';
+ try{
+  const response=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query)});
+  if(!response.ok)throw Error('บริการแผนที่ตอบกลับ '+response.status);
+  const data=await response.json();const list=(data.elements||[]).map(e=>{const t=e.tags||{},lat=e.lat??e.center?.lat,lon=e.lon??e.center?.lon;if(!lat||!lon)return null;return {name:t.name||t['name:en']||t.operator||'ลานจอดรถ (ไม่มีชื่อ)',lat,lon,t,d:dist(p.lat,p.lon,lat,lon)}}).filter(Boolean).sort((a,b)=>a.d-b.d);
+  summary.textContent='พบ '+list.length+' ลานจอด · ใกล้ '+p.name+' · ระยะเดินโดยประมาณคำนวณจากระยะเส้นตรง';
+  if(!list.length){results.innerHTML='<div style="padding:16px">ไม่พบข้อมูลลานจอดในรัศมีนี้ ลองขยายรัศมีค้นหาได้ครับ</div>';return}
+  results.innerHTML=list.slice(0,35).map((x,i)=>{const s=status(x.t),walk=Math.max(1,Math.round(x.d/75)),charge=price(x.t),hours=x.t.opening_hours||'ไม่มีข้อมูลเวลาเปิด',cap=x.t.capacity||'ไม่ระบุ',fee=x.t.fee==='no'?'ไม่มีค่าจอดตามข้อมูลแผนที่':charge;const nav='https://www.google.com/maps/dir/?api=1&destination='+x.lat+','+x.lon+'&travelmode=driving';const walkurl='https://www.google.com/maps/dir/?api=1&origin='+x.lat+','+x.lon+'&destination='+p.lat+','+p.lon+'&travelmode=walking';return '<article class="parking-result"><div><h4>'+(i+1)+'. '+esc(x.name)+'</h4><p>ห่าง '+(x.d<1000?Math.round(x.d)+' ม.':(x.d/1000).toFixed(1)+' กม.')+' · เดินประมาณ '+walk+' นาที</p><p>ราคา: '+esc(fee)+'</p><p>เวลาเปิด: '+esc(hours)+' · ความจุ: '+esc(cap)+' ช่อง</p><p>ข้อจำกัดรถ: '+esc(x.t.maxheight||x.t.maxwidth||'ตรวจสอบป้ายหน้างาน')+'</p><a target="_blank" rel="noopener" href="'+nav+'">🚗 นำทางไปลานจอด</a><a target="_blank" rel="noopener" href="'+walkurl+'">🚶 เส้นทางเดินไปจุดหมาย</a></div><span class="status '+s.cls+'">'+s.label+'</span></article>'}).join('');
+  const bounds=[];list.slice(0,35).forEach((x,i)=>{const s=status(x.t),m=L.marker([x.lat,x.lon]).bindPopup('<b>'+esc(x.name)+'</b><br>'+Math.round(x.d)+' ม. จากจุดหมาย<br>'+esc(price(x.t))+'<br>'+s.label);m.addTo(layers);bounds.push([x.lat,x.lon])});L.marker([p.lat,p.lon]).addTo(layers).bindPopup('<b>จุดหมาย: '+esc(p.name)+'</b>');bounds.push([p.lat,p.lon]);pmap.fitBounds(bounds,{padding:[25,25],maxZoom:15});
+ }catch(e){summary.textContent='ค้นหาข้อมูลไม่สำเร็จ';results.innerHTML='<div style="padding:16px;color:#9b3b3b">ไม่สามารถเชื่อมต่อฐานข้อมูลที่จอดรถได้ในขณะนี้ ('+esc(e.message)+') ลองใหม่ภายหลัง หรือเปิด Google Maps เพื่อค้นหาลานจอดใกล้จุดหมาย</div>'}
+ finally{btn.disabled=false;btn.textContent='ค้นหาที่จอด'}
+}
+btn.addEventListener('click',search);sel.addEventListener('change',()=>{const p=places[Number(sel.value)];pmap.setView([p.lat,p.lon],14);layers.clearLayers();L.marker([p.lat,p.lon]).addTo(layers).bindPopup('จุดหมาย: '+p.name).openPopup()});
+const defaultIndex=places.findIndex(p=>p.name==='Otaru Canal');sel.value=String(defaultIndex);setTimeout(()=>{const p=places[defaultIndex];pmap.setView([p.lat,p.lon],14);L.marker([p.lat,p.lon]).addTo(layers).bindPopup('จุดหมาย: '+p.name)},250);
+})();
+
 </script>
 </body></html>
